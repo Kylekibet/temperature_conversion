@@ -4,23 +4,25 @@ fn main() {
     println!("Welcome to Temperature Converter!");
 
     let degree_sign = '\u{00B0}';
-    let f_temp = get_input();
+    let temp_to_convert = get_temperature_input();
 
     loop {
         println!("Would you like to convert to \n1. Fahrenheit \n2. Celsius");
 
-        let choice = get_input();
+        let choice = get_menu_choice();
 
-        match choice as u32 {
+        match choice {
             1 => {
-                println!("{:.2}{degree_sign}F", c_to_f(f_temp));
+                let converted_temp = c_to_f(temp_to_convert);
+                println!("{:.2}{degree_sign}C is {:.2}{degree_sign}F", temp_to_convert, converted_temp);
                 break;
             }
             2 => {
-                println!("{:.2}{degree_sign}C", f_to_c(f_temp));
+                let converted_temp = f_to_c(temp_to_convert);
+                println!("{:.2}{degree_sign}F is {:.2}{degree_sign}C", temp_to_convert, converted_temp);
                 break;
             }
-            _ => println!("Please choose between 1 and 2"),
+            _ => println!("Please choose between 1 and 2")
         }
     }
 }
@@ -33,11 +35,11 @@ fn c_to_f(num: f64) -> f64 {
     (num * 1.8) + 32.0
 }
 
-fn get_input() -> f64 {
+fn get_temperature_input() -> f64 {
     loop {
         let mut number = String::new();
 
-        println!("Please input a number:");
+        println!("Please enter the temperature to convert:");
 
         io::stdin()
             .read_line(&mut number)
@@ -51,5 +53,25 @@ fn get_input() -> f64 {
             }
         };
         return number;
+    }
+}
+
+fn get_menu_choice() -> u32 {
+    loop {
+        let mut choice = String::new();
+
+        println!("Please enter your choice (1 or 2):");
+
+        io::stdin()
+            .read_line(&mut choice)
+            .expect("Failed to read line");
+
+        match choice.trim().parse() {
+            Ok(num) => return num,
+            Err(_) => {
+                println!("Invalid input. Please enter 1 or 2.");
+                continue;
+            }
+        };
     }
 }
